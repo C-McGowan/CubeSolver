@@ -61,7 +61,3 @@ def multiple_moves(state, moves):
     for move in moves:
         state = do_move(state, move)
     return state
-
-
-solved_state = np.array([i//4 for i in range(24)])
-
