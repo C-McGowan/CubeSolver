@@ -15,6 +15,10 @@ class TestSolver(unittest.TestCase):
         starting_state = multiple_moves(solved_state, ['R', "D'"]).tolist()
         self.assertEqual(breadth_first_search(starting_state), ["D", "R'"])
 
+    def test_scramble_one(self):
+        solved_state = np.array([i // 4 for i in range(24)])
+        starting_state = multiple_moves(solved_state, ["R", "R", "D", "D", "B", "B", "D'", "R", "D", "R", "B'", "R"]).tolist()
+        self.assertEqual(len(breadth_first_search(starting_state)), 12)
 
 if __name__ == '__main__':
     unittest.main()

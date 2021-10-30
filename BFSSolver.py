@@ -1,5 +1,5 @@
 import numpy as np
-from CubeRepresentation import do_move, move_dict, multiple_moves, print_word_cube
+from CubeRepresentation import do_move, move_dict
 from collections import deque
 
 
