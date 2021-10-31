@@ -2,6 +2,7 @@ import unittest
 from CubeRepresentation import multiple_moves, SOLVED_STATE
 from BFSSolver import breadth_first_search, State
 
+
 # TODO: Parameterise tests
 # TODO: Fix other tests
 class TestSolver(unittest.TestCase):

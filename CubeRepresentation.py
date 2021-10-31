@@ -1,8 +1,26 @@
 import numpy as np
 
-SOLVED_STATE = [i // 4 for i in range(24)]
 # TODO: Main function with verbose argument for solves
 # TODO: Functionality: random scramble - happy with state?, input scrambled state, manually scramble, solve
+# TODO: Turn into class
+# TODO: Override print with print_word_cube, remove print_cube
+
+class Permutation:
+    def __init__(self, permutation):
+        self.permutation = permutation
+
+    def permutation_after_move(self, move):
+        return Permutation(self.permutation[ALL_MOVES[move]])
+
+    def hash_state(self):
+        return tuple(self.permutation)
+
+    def __eq__(self, other):
+        return np.array_equal(self.permutation, other.permutation)
+
+
+SOLVED_STATE = Permutation(np.array([i // 4 for i in range(24)]))
+
 COLOURS = {
     0: "white ",
     1: "green ",
@@ -41,14 +59,3 @@ def print_cube(state):
 def print_word_cube(state):
     word_state = [COLOURS[state[i]] for i in state]
     print(print_net(word_state))
-
-
-def do_move(state, move):
-    state = np.array(state)
-    return state[ALL_MOVES[move]].tolist()
-
-
-def multiple_moves(state, moves):
-    for move in moves:
-        state = do_move(state, move)
-    return state
