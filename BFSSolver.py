@@ -1,4 +1,4 @@
-from CubeRepresentation import ALL_MOVES, Permutation, SOLVED_STATE
+from CubeRepresentation import ALL_MOVES, SOLVED_STATE
 from collections import deque
 
 

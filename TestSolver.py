@@ -1,5 +1,5 @@
 import unittest
-from CubeRepresentation import multiple_moves, SOLVED_STATE
+from CubeRepresentation import SOLVED_STATE
 from BFSSolver import breadth_first_search, State
 
 

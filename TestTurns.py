@@ -1,5 +1,5 @@
 import unittest
-from CubeRepresentation import do_move, SOLVED_STATE
+from CubeRepresentation import Permutation, SOLVED_STATE
 
 # TODO: Parameterise tests
 class TestTurns(unittest.TestCase):
