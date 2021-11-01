@@ -30,7 +30,7 @@ class Permutation:
         return np.array_equal(self.permutation, other.permutation)
 
 
-SOLVED_STATE = Permutation(np.array([i // 4 for i in range(24)]))
+SOLVED_PERMUTATION = Permutation(np.array([i // 4 for i in range(24)]))
 
 COLOURS = {
     0: "white ",

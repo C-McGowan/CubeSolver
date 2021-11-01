@@ -1,9 +1,9 @@
-from CubeRepresentation import ALL_MOVES, SOLVED_STATE
+from CubeRepresentation import ALL_MOVES, SOLVED_PERMUTATION
 from collections import deque
 
 
 class State:
-    def __init__(self, permutation=SOLVED_STATE, path=None):
+    def __init__(self, permutation=SOLVED_PERMUTATION, path=None):
         self.permutation = permutation
         self.path = path
         if self.path is None:
@@ -28,7 +28,7 @@ def breadth_first_search(start_state):
         current_state = queue.popleft()
         if current_state.hash_state() in visited_states:
             continue
-        if current_state.permutation == SOLVED_STATE:
+        if current_state.permutation == SOLVED_PERMUTATION:
             return current_state.path
         visited_states[current_state.hash_state()] = current_state.path
         for next_state in current_state.all_next_states():
