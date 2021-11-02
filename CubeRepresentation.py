@@ -1,13 +1,10 @@
 import numpy as np
-
-# TODO: Main function with verbose argument for solves
-# TODO: Functionality: random scramble - happy with state?, input scrambled state, manually scramble, solve
-# TODO: Turn into class
+from enum import Enum
 
 
 class Permutation:
     def __init__(self, permutation):
-        self.permutation = permutation
+        self.permutation = np.array(permutation)
 
     def permutation_after_move(self, move):
         return Permutation(self.permutation[ALL_MOVES[move]])
@@ -16,7 +13,7 @@ class Permutation:
         return tuple(self.permutation)
 
     def __str__(self):
-        word_permutation = [COLOURS[self.permutation[i]] for i in range(len(self.permutation))]
+        word_permutation = [COLOURS[self.permutation[i]].center(6) for i in range(len(self.permutation))]
         leading_space = len(f'|{word_permutation[0]}|{word_permutation[1]}')
         net = "{spaces}|{0}|{1}|\n" \
               "{spaces}|{2}|{3}|\n" \
@@ -33,13 +30,23 @@ class Permutation:
 SOLVED_PERMUTATION = Permutation(np.array([i // 4 for i in range(24)]))
 
 COLOURS = {
-    0: "white ",
-    1: "green ",
-    2: " red  ",
-    3: " blue ",
+    0: "white",
+    1: "green",
+    2: "red",
+    3: "blue",
     4: "orange",
     5: "yellow"
 }
+
+COLOUR_VALUES = {
+    "white": 0,
+    "green": 1,
+    "red": 2,
+    "blue": 3,
+    "orange": 4,
+    "yellow": 5
+}
+
 
 ALL_MOVES = {  # TODO: Turn into enum
     # R turn maps face 0 -> 0, 5 -> 1, 2-> 2 etc.
