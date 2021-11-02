@@ -1,14 +1,5 @@
-from CubeRepresentation import ALL_MOVES, SOLVED_PERMUTATION
+from CubeRepresentation import ALL_MOVES, SOLVED_PERMUTATION, move_opposites
 from collections import deque
-
-move_opposites = {
-    "R": "R'",
-    "R'": "R",
-    "B": "B'",
-    "B'": "B",
-    "D": "D'",
-    "D'": "D"
-}
 
 
 class State:
@@ -26,31 +17,31 @@ class State:
     def all_next_states(self):
         return [self.get_next_state(move) for move in ALL_MOVES]
 
-    def hash_state(self):
-        return self.permutation.hash_state()
-
 
 def breadth_first_search(start_state):
+    if start_state.permutation == SOLVED_PERMUTATION:
+        return []
     queue = deque([start_state])
-    visited_states = {}
+    visited_states = {start_state.permutation: []}
     while queue:
         current_state = queue.popleft()
-        if current_state.hash_state() in visited_states:
-            continue
-        if current_state.permutation == SOLVED_PERMUTATION:
-            return current_state.path
-        visited_states[current_state.hash_state()] = current_state.path
         for next_state in current_state.all_next_states():
-            queue.append(next_state)
+            if next_state.permutation == SOLVED_PERMUTATION:
+                return next_state.path
+            if next_state.permutation not in visited_states:
+                visited_states[next_state.permutation] = next_state.path
+                queue.append(next_state)
 
     raise ValueError("Started from illegal state.")
 
 
 def get_combined_path(search_path, solution_path):
-    return search_path + [move_opposites[move] for move in solution_path.reverse()]
+    return search_path + [move_opposites[move] for move in solution_path[::-1]]
 
 
 def bidirectional_breadth_first_search(start_state):
+    """Perform breadth first search forwards from starting scramble and backwards from solution,
+    joining the paths when the same permutation is reached from both sides."""
     search_queue = deque([start_state])
     solution_queue = deque([State(SOLVED_PERMUTATION)])
     visited_search_states = {}
@@ -58,24 +49,25 @@ def bidirectional_breadth_first_search(start_state):
 
     while search_queue and solution_queue:
         current_search_state = search_queue.popleft()
-        if current_search_state.hash_state() in visited_solution_states:
-            solution_path = visited_solution_states[current_search_state.hash_state()]
+        if current_search_state.permutation in visited_solution_states:
+            solution_path = visited_solution_states[current_search_state.permutation]
             return get_combined_path(current_search_state.path, solution_path)
 
-        elif current_search_state.hash_state() not in visited_search_states:
-            visited_search_states[current_search_state.hash_state()] = current_search_state.path
+        elif current_search_state.permutation not in visited_search_states:
+            visited_search_states[current_search_state.permutation] = current_search_state.path
             for next_search_state in current_search_state.all_next_states():
                 search_queue.append(next_search_state)
 
         current_solution_state = solution_queue.popleft()
-        if current_solution_state.hash_state() in visited_search_states:
-            search_path = visited_search_states[current_solution_state.hash_state()]
+        if current_solution_state.permutation in visited_search_states:
+            search_path = visited_search_states[current_solution_state.permutation]
             return get_combined_path(search_path, current_solution_state.path)
 
-        elif current_solution_state.hash_state() not in visited_solution_states:
-            visited_solution_states[current_solution_state.hash_state()] = current_solution_state.path
+        elif current_solution_state.permutation not in visited_solution_states:
+            visited_solution_states[current_solution_state.permutation] = current_solution_state.path
             for next_solution_state in current_solution_state.all_next_states():
                 solution_queue.append(next_solution_state)
+
     raise ValueError("Started from illegal state.")
 
 

@@ -3,20 +3,30 @@ from BFSSolver import State, bidirectional_breadth_first_search
 import random
 
 
-def get_user_input(message, valid_responses, error_message):
-    valid_responses = [response.upper() for response in valid_responses]
+def get_user_input(message, valid_responses, error_message, match_first_letter=False):
+    valid_inputs = {response.upper(): response for response in valid_responses}
+    if match_first_letter:
+        valid_inputs.update({response[0].upper(): response for response in valid_responses})
     while True:
         user_input = input(message).strip().upper()
-        if user_input in valid_responses:
-            return user_input
-        print(error_message)
+        try:
+            return valid_inputs[user_input]
+        except KeyError:
+            print(error_message)
+
+
+def stringify_moves(moves):
+    return ", ".join(moves)
 
 
 def random_scramble(length=20):
     permutation = SOLVED_PERMUTATION
-    for i in range(length):
-        move = random.choice(list(ALL_MOVES.keys()))
+    moves = [random.choice(list(ALL_MOVES.keys())) for i in range(length)]
+    for move in moves:
         permutation = permutation.permutation_after_move(move)
+    print("Scramble: " + stringify_moves(moves))
+    print(permutation)
+    input()
     return permutation
 
 
@@ -27,12 +37,13 @@ def manual_scramble(permutation=SOLVED_PERMUTATION):
     error_message = """Invalid move
                     Please enter a valid move, or press q to exit
                     Valid moves are: R, R', B, B', D or D'"""
-    valid_moves = ALL_MOVES.keys() + ["Q"]
+    valid_moves = list(ALL_MOVES.keys()) + ["Q"]
     while True:
         move = get_user_input(message, valid_moves, error_message)
         if move == "Q":
+            print(permutation)
             break
-        permutation.permutation_after_move(move)
+        permutation = permutation.permutation_after_move(move)
     return permutation
 
 
@@ -51,18 +62,16 @@ def input_scramble():
     colour_net = net.format(*input_permutation, spaces=" " * leading_space)
     print("Please orient the cube so that the white sticker of the white-green-orange piece is facing up, "
           "and the green piece if facing towards you.")
-    print("Valid colours: 'white', 'green', 'red', 'blue', 'orange', 'yellow'")
+    print("Valid colours: (w)hite, (g)reen, (r)ed, (b)lue, (o)range, (y)ellow")
     for i in range(24):
         if i in [2, 4, 17]:
             continue
 
         inputted_piece = get_user_input(
-            message=f'''
-                    {colour_net}
-
-                    Please enter the colour at position {i}: ''',
+            message=f'\n{colour_net}\n\nPlease enter the colour at position {i}: ',
             valid_responses=COLOURS.values(),
-            error_message="Colour error, valid colours are: 'white', 'green', 'red', 'blue', 'orange', 'yellow'"
+            error_message="Colour error, valid colours are: 'white', 'green', 'red', 'blue', 'orange', 'yellow'",
+            match_first_letter=True
         )
 
         input_permutation[i] = inputted_piece.center(6)
@@ -71,8 +80,10 @@ def input_scramble():
     return Permutation([COLOUR_VALUES[colour.strip()] for colour in input_permutation])
 
 
-def solve_cube(permutation):
-    return bidirectional_breadth_first_search(State(permutation))
+def solve_cube(permutation, solve_function=bidirectional_breadth_first_search):
+    solution_path = solve_function(State(permutation))
+    print("Solution: " + stringify_moves(solution_path))
+    input()
 
 
 def main():
@@ -100,12 +111,12 @@ def main():
         elif action == "4":
             permutation = input_scramble()
         elif action == "5":
-            solution_path = solve_cube(permutation)
-            print("Solution: " + ", ".join(solution_path))
+            solve_cube(permutation, bidirectional_breadth_first_search)
         elif action == "6":
             permutation = SOLVED_PERMUTATION
         elif action == "7":
             break
 
 
-main()
+if __name__ == '__main__':
+    main()

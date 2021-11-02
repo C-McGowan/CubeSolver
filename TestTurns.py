@@ -1,12 +1,11 @@
 import unittest
 from CubeRepresentation import SOLVED_PERMUTATION, Permutation
-import numpy as np
 
 # TODO: Parameterise tests
 class TestTurns(unittest.TestCase):
     def test_r_turn(self):
         self.assertEqual(SOLVED_PERMUTATION.permutation_after_move("R"),
-                         Permutation([0, 1, 0, 1, 1, 5, 1, 5, 2, 2, 2, 2, 0, 3, 0 , 3, 4, 4, 4, 4, 5, 3, 5, 3]))
+                         Permutation([0, 1, 0, 1, 1, 5, 1, 5, 2, 2, 2, 2, 0, 3, 0, 3, 4, 4, 4, 4, 5, 3, 5, 3]))
 
     def test_r_prime_turn(self):
         self.assertEqual(SOLVED_PERMUTATION.permutation_after_move("R'"),

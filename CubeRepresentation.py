@@ -1,5 +1,4 @@
 import numpy as np
-from enum import Enum
 
 
 class Permutation:
@@ -9,8 +8,8 @@ class Permutation:
     def permutation_after_move(self, move):
         return Permutation(self.permutation[ALL_MOVES[move]])
 
-    def hash_state(self):
-        return tuple(self.permutation)
+    def __hash__(self):
+        return hash(tuple(self.permutation))
 
     def __str__(self):
         word_permutation = [COLOURS[self.permutation[i]].center(6) for i in range(len(self.permutation))]
@@ -38,17 +37,9 @@ COLOURS = {
     5: "yellow"
 }
 
-COLOUR_VALUES = {
-    "white": 0,
-    "green": 1,
-    "red": 2,
-    "blue": 3,
-    "orange": 4,
-    "yellow": 5
-}
+COLOUR_VALUES = {colour: number for number, colour in COLOURS.items()}
 
-
-ALL_MOVES = {  # TODO: Turn into enum
+ALL_MOVES = {
     # R turn maps face 0 -> 0, 5 -> 1, 2-> 2 etc.
     "R": np.array([0, 5, 2, 7, 4, 21, 6, 23, 10, 8, 11, 9, 3, 13, 1, 15, 16, 17, 18, 19, 20, 14, 22, 12]),
     "R'": np.array([0, 14, 2, 12, 4, 1, 6, 3, 9, 11, 8, 10, 23, 13, 21, 15, 16, 17, 18, 19, 20, 5, 22, 7]),
@@ -56,4 +47,13 @@ ALL_MOVES = {  # TODO: Turn into enum
     "D'": np.array([0, 1, 2, 3, 4, 5, 10, 11, 8, 9, 14, 15, 12, 13, 18, 19, 16, 17, 6, 7, 21, 23, 20, 22]),
     "B": np.array([9, 11, 2, 3, 4, 5, 6, 7, 8, 23, 10, 22, 14, 12, 15, 13, 1, 17, 0, 19, 20, 21, 16, 18]),
     "B'": np.array([18, 16, 2, 3, 4, 5, 6, 7, 8, 0, 10, 1, 13, 15, 12, 14, 22, 17, 23, 19, 20, 21, 11, 9]),
+}
+
+move_opposites = {
+    "R": "R'",
+    "R'": "R",
+    "B": "B'",
+    "B'": "B",
+    "D": "D'",
+    "D'": "D"
 }

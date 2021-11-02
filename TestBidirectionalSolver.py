@@ -1,11 +1,9 @@
 import unittest
-import numpy as np
 from CubeRepresentation import SOLVED_PERMUTATION, Permutation
 from BFSSolver import bidirectional_breadth_first_search, State
 
 
 # TODO: Parameterise tests
-# TODO: Fix other tests
 class TestSolver(unittest.TestCase):
     def test_start_state(self):
         self.assertEqual(bidirectional_breadth_first_search(State()), [])
