@@ -46,18 +46,21 @@ def breadth_first_search(start_state):
     raise ValueError("Started from illegal state.")
 
 
+def get_combined_path(search_path, solution_path):
+    return search_path + [move_opposites[move] for move in solution_path.reverse()]
+
+
 def bidirectional_breadth_first_search(start_state):
     search_queue = deque([start_state])
     solution_queue = deque([State(SOLVED_PERMUTATION)])
     visited_search_states = {}
     visited_solution_states = {}
+
     while search_queue and solution_queue:
         current_search_state = search_queue.popleft()
         if current_search_state.hash_state() in visited_solution_states:
-            search_path = current_search_state.path
             solution_path = visited_solution_states[current_search_state.hash_state()]
-            inverted_solution_path = [move_opposites[move] for move in solution_path[::-1]]
-            return search_path + inverted_solution_path
+            return get_combined_path(current_search_state.path, solution_path)
 
         elif current_search_state.hash_state() not in visited_search_states:
             visited_search_states[current_search_state.hash_state()] = current_search_state.path
@@ -67,8 +70,7 @@ def bidirectional_breadth_first_search(start_state):
         current_solution_state = solution_queue.popleft()
         if current_solution_state.hash_state() in visited_search_states:
             search_path = visited_search_states[current_solution_state.hash_state()]
-            inverted_solution_path = [move_opposites[move] for move in current_solution_state.path[::-1]]
-            return search_path + inverted_solution_path
+            return get_combined_path(search_path, current_solution_state.path)
 
         elif current_solution_state.hash_state() not in visited_solution_states:
             visited_solution_states[current_solution_state.hash_state()] = current_solution_state.path
